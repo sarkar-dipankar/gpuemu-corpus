@@ -7,16 +7,19 @@ daemon can validate any project's kernels against the same controlled set.
 
 ## What's in it
 
-- **15 correct controls** — `softmax_triton`, `gelu_triton`, `silu_triton`,
-  `rmsnorm_triton`, `l2norm_triton`, `leaky_relu_triton`, `relu_triton`,
-  `sigmoid_triton`, `tanh_triton`, `elu_triton`, `matmul_triton`,
-  `attention_triton`, `flash_attention_triton`, plus `softmax`, `layernorm`,
-  `matmul` numpy baselines.
-- **9 LLM-style buggy variants** — `softmax_llm_buggy`, `softmax_triton_buggy`,
-  `gelu_triton_buggy`, `silu_triton_buggy`, `rmsnorm_triton_buggy`,
-  `l2norm_triton_buggy`, `leaky_relu_triton_buggy`, `matmul_triton_buggy`
-  (`acc=` vs `acc+=`), `attention_triton_buggy` (missing `1/√D`),
-  `flash_attention_triton_buggy` (missing `acc*α` rescale on max update).
+- **16 correct controls** — 13 Triton kernels: `softmax_triton`,
+  `gelu_triton`, `silu_triton`, `rmsnorm_triton`, `l2norm_triton`,
+  `leaky_relu_triton`, `relu_triton`, `sigmoid_triton`, `tanh_triton`,
+  `elu_triton`, `matmul_triton`, `attention_triton`,
+  `flash_attention_triton`. Plus 3 numpy baselines: `softmax`,
+  `layernorm`, `matmul`.
+- **10 LLM-style buggy variants** — `softmax_llm_buggy`,
+  `softmax_triton_buggy`, `gelu_triton_buggy`, `silu_triton_buggy`,
+  `rmsnorm_triton_buggy`, `l2norm_triton_buggy`,
+  `leaky_relu_triton_buggy`, `matmul_triton_buggy` (`acc=` instead of
+  `acc+=`), `attention_triton_buggy` (missing `1/√D`),
+  `flash_attention_triton_buggy` (missing `acc*α` rescale on max
+  update).
 
 Each op has:
 - `meta.json` — name, source, benchmark_verdict, input_names, reference path,
@@ -26,8 +29,20 @@ Each op has:
 
 ## Install
 
+`gpuemu-corpus` is currently installable from source. PyPI publish is
+planned for a follow-up release.
+
 ```bash
-pip install gpuemu-corpus
+pip install git+https://github.com/sarkar-dipankar/gpuemu-corpus.git
+```
+
+Or, for local development with a checkout of `gpuemu-paper` alongside:
+
+```bash
+git clone https://github.com/sarkar-dipankar/gpuemu-corpus.git
+cd gpuemu-corpus
+python3 scripts/vendor_corpus.py --paper-repo ../gpuemu-paper
+pip install -e .
 ```
 
 ## Register the corpus with the gpuemu daemon
