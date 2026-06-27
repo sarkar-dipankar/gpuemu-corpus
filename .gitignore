@@ -1,6 +1,4 @@
-# The vendored corpus is checked in only at release time. Day-to-day dev
 # vendors locally and the data dir is gitignored.
-gpuemu_corpus/data/
 
 # Python packaging
 build/
